@@ -6,14 +6,22 @@ import { prisma } from "@/lib/prisma";
 import BookingForm from "@/components/spaces/BookingForm";
 import { SpaceDetailPageProps } from "@/types";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 async function SpaceDetailContent({
   params,
 }: SpaceDetailPageProps): Promise<React.JSX.Element> {
   const { id } = await params;
 
-  const space = await prisma.space.findUnique({
-    where: { id },
-  });
+  let space = null;
+  try {
+    space = await prisma.space.findUnique({
+      where: { id },
+    });
+  } catch (error) {
+    console.warn(`Failed to query space detail for ID ${id} at build/SSR time:`, error);
+  }
 
   if (!space || !space.isActive) {
     notFound();

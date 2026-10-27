@@ -3,11 +3,19 @@ import { prisma } from "@/lib/prisma";
 import AdminSpacesTable from "@/components/admin/AdminSpacesTable";
 import { Space } from "@/types";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 async function SpacesTableData(): Promise<React.JSX.Element> {
-  const spaces: Space[] = await prisma.space.findMany({
-    orderBy: { createdAt: "desc" },
-  });
-  return <AdminSpacesTable initialSpaces={spaces} />;
+  try {
+    const spaces: Space[] = await prisma.space.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    return <AdminSpacesTable initialSpaces={spaces} />;
+  } catch (error) {
+    console.warn("Failed to query spaces in admin page at build/SSR time:", error);
+    return <AdminSpacesTable initialSpaces={[]} />;
+  }
 }
 
 export default function AdminSpacesPage(): React.JSX.Element {

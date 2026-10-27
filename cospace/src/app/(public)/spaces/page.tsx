@@ -3,11 +3,19 @@ import { prisma } from "@/lib/prisma";
 import SpaceCard from "@/components/spaces/SpaceCard";
 import { Space } from "@/types";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 async function SpacesList(): Promise<React.JSX.Element> {
-  const spaces: Space[] = await prisma.space.findMany({
-    where: { isActive: true },
-    orderBy: { createdAt: "desc" },
-  });
+  let spaces: Space[] = [];
+  try {
+    spaces = await prisma.space.findMany({
+      where: { isActive: true },
+      orderBy: { createdAt: "desc" },
+    });
+  } catch (error) {
+    console.warn("Failed to query spaces in catalog at build/SSR time:", error);
+  }
 
   if (spaces.length === 0) {
     return (
