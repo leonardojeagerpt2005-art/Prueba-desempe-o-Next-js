@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum SpaceType {
+  DESK
+  MEETING_ROOM
+  BOOTH
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+model User {
+  id               String    @id @default(uuid())
+  name             String
+  email            String    @unique
+  passwordHash     String
+  role             Role      @default(USER)
+  refreshTokenHash String?   // Almacena el refresh token hasheado (null al cerrar sesión)
+  bookings         Booking[]
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model Space {
+  id          String    @id @default(uuid())
+  name        String
+  description String
+  type        SpaceType
+  capacity    Int
+  pricePerHour Float
+  imageUrl    String
+  isActive    Boolean   @default(true) // No se elimina, se desactiva
+  bookings    Booking[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Booking {
+  id         String        @id @default(uuid())
+  userId     String
+  spaceId    String
+  startTime  DateTime
+  endTime    DateTime
+  totalPrice Float         // Calculado estrictamente en el servidor
+  status     BookingStatus @default(CONFIRMED)
+  user       User          @relation(fields: [userId], references: [id])
+  space      Space         @relation(fields: [spaceId], references: [id])
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  @@index([spaceId, startTime, endTime])
+  @@index([userId, startTime, endTime])
+}

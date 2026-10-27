@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  cospace-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cospace_fullstack
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+      
