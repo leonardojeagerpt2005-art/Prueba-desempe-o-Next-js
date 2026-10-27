@@ -48,6 +48,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const tokenPayload: TokenPayload = { userId: user.id, email: user.email, role: user.role };
     const accessToken = await signAccessToken(tokenPayload);
     const refreshToken = await signRefreshToken(tokenPayload);
+    
 
     const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
     await prisma.user.update({
