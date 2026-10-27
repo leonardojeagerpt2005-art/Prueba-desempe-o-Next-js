@@ -9,7 +9,7 @@ La plataforma implementa un modelo de seguridad basado en tokens JWT (Access & R
 ## 🌐 Enlaces del Proyecto
 
 - **Aplicación Desplegada (Vercel):** `prueba-desempe-o-next-js-5faq-o2jvfs2b5-leonar-group.vercel.app`
-- **Repositorio de Código (GitHub):** `https://github.com/[TU_USUARIO]/cospace`
+- **Repositorio de Código (GitHub):** `[https://github.com/[TU_USUARIO]/cospace](https://github.com/leonardojeagerpt2005-art/Prueba-desempe-o-Next-js.git)`
 
 ---
 
